@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "127.0.0.1:5433:5432"
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c max_connections=200
+    environment:
+      POSTGRES_DB: base
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+
+  postgis:
+    image: kartoza/postgis:15-3.3
+    environment:
+      POSTGRES_DB: gis
+      POSTGRES_USER: gis
+      POSTGRES_PASS: password
+      POSTGRES_MULTIPLE_EXTENSIONS: postgis,hstore,postgis_topology,postgis_raster,pgrouting
+    ports:
+      - "127.0.0.1:5434:5432"
+    restart: always
+
+  zombo:
+    image: dalongrong/zombodb-postgresql-10-centos7
+    ports:
+      - "127.0.0.1:5435:5432"
+    environment:
+      POSTGRESQL_DATABASE: zombo
+      POSTGRESQL_USER: zombo
+      POSTGRESQL_PASSWORD: password
+  elasticsearch:
+    image: elasticsearch:6.6.0
+    ports:
+      - "127.0.0.1:9200:9200"
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1

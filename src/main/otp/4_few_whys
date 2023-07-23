@@ -1,0 +1,24 @@
+Q: So why those numbers are more secure than old-school password?
+A: This additional layer of security makes a life harder for attackers.
+   If an attacker somehow manages to intercept the code, this method prevents they from guessing the next code unless they known to the secret key.
+   Also OTP is synced between two entities without need of communication through internet (potential medium of attacks).
+   But OTP is still vulnerable to phishing attacks.
+
+Q: Why if our device is out of sync with server?
+A: Oh, that's bad XD But not much if we are not extremely out of sync.
+   Most of OTP servers compute OTP for few previous and next counter values. So if we are out of sync a bit, we could still log in :3
+   RFC 6238 suggests a default of ±2 time windows.
+   Server usually logs if we were out of sync and try to sync.
+
+
+Q: Sometimes the OTP expire but I'm able to log in, why?
+A: Answered above. Server calculate usually calculates OTP for t-1, t, t+1
+
+
+Q: Why don't we just take first 4 bytes from HMAC-SHA1? Why do we have to take those 4 lower bits for offset?
+A: Mostly, the thing from the past. Researchers hope if there was an attack (e.g. time-space)
+   that lets you compute just the first 4-bytes of a hash cheaper, the entire algorithm would fail.
+   You are just forced to compute the entire hash.
+   Btw it's not longer true, but RFC is from 2005, cryptography progressed a lot in those 17 years.
+
+Q: Is OTP

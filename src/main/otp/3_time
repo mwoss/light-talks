@@ -1,0 +1,34 @@
+Described more deeply in RFC 6238 (2011)
+---------------------------------
+
+"Improved" variant of previously showed HMAC based OTP.
+In this version the counter (input argument) is a time difference between "now" and some fixed point in time, divided by some fixed time interval.
+
+Usually point in time is Unix epoch (1 Jan 1970), and time interval is 30 sec.
+
+---------------------------------
+
+func totp(secret []byte) (string, error) {
+  // Counter is UNIX time in seconds, divided by interval of 30 seconds
+  counter := time.Now().Unix() / 30
+  // Decode Base-32 secret key
+  key := make([]byte, 64)
+  if _, err := base32.StdEncoding.Decode(key, bytes.ToUpper([]byte(secret))); err != nil {
+    return "", err
+  }
+  // Write counter as 8 bytes, big-endian
+  b := make([]byte, 8)
+  binary.BigEndian.PutUint64(b, uint64(counter))
+  // Calcular HMAC-SHA-1
+  mac160 := hmac.New(sha1.New, key)
+  mac160.Write(b)
+  b = mac160.Sum(nil)
+  // Find offset, lower 4 bits of the last byte
+  offset := b[len(b)-1] & 0xf
+  // Read 4 bytes from offset as 32-bit integer
+  n := binary.BigEndian.Uint32(b[offset : offset+4])
+  // Covert it to decimal
+  s := fmt.Sprintf("%06d", int(n & 0x7fffffff))
+  // Return last 6 digits
+  return s[len(s)-6:], nil
+}

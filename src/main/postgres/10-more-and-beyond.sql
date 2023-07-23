@@ -1,0 +1,6 @@
+-- Domains
+-- Grouping sets
+-- Table inheritance
+-- Foreign data wrappers
+-- Range types
+-- Recursive queries
