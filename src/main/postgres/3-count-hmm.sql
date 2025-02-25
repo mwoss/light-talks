@@ -3,6 +3,8 @@
 -- It may kill your database if you operate on huge dataset.
 -- So does big values use different tech to for example count how many likes this popular video/photo has?
 
+DROP TABLE IF EXISTS random_table;
+
 CREATE TABLE random_table
 (
     col1 text,
@@ -16,11 +18,14 @@ SELECT LEFT(md5(i:: text), 10),
        md5(random():: text),
        md5(random():: text),
        LEFT(md5(random():: text), 4)
-FROM generate_series(1, 185813511) s(i);
+FROM generate_series(1, 18581356) s(i);
 
--- Database sis on fire, it's burning like B1 server in Provo basement.
+-- Database is on fire!!
 SELECT COUNT(*)
 FROM random_table;
 
 -- Bam, we got approximation in matter of milliseconds.
-EXPLAIN SELECT * FROM random_table
+EXPLAIN SELECT * FROM random_table;
+
+-- OR
+SELECT reltuples AS estimate FROM pg_class WHERE relname = 'random_table';

@@ -3,7 +3,7 @@
 
 -- This new syntax allows is to prevent an accidental override of the value.
 
--- It's also easier to setup privileges as we don't have to care about granting USAGE privilege for underlying sequence.
+-- It's also easier to set up privileges as we don't have to care about granting USAGE privilege for underlying sequence.
 
 CREATE TABLE t1
 (
@@ -15,9 +15,11 @@ CREATE TABLE t2
     id   INTEGER PRIMARY key generated always AS IDENTITY,
     name text
 );
--- OH :< The sequence was not advanced and it's out of the sync now.
-INSERT INTO t1 (id, name) VALUES (1, 'lol');
+
+-- OH :< The sequence was not advanced, and it's out of the sync now.
+INSERT INTO t1 (id, name) VALUES (1, 'lol')
 INSERT INTO t1 (name) VALUES ('xd');
+
 -- Immediate error. Now we cannot accidentally override sequence.
 INSERT INTO t2 (id, name) VALUES (1, 'lol');
 

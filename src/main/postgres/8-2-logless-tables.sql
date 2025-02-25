@@ -9,6 +9,11 @@
 -- * Dynamic data that you can afford losing, such as user sessions.
 -- * Static data that you can afford losing and re-importing in the unlikely event of a server crash.
 
+-- Disadvantages
+--- D from ACID is gone :< Tables are truncated on crash recovery.
+--- Only accessible on the primary node, not on the replicas (replication mechanism)
+--- Unlogged tables cannot be used in logical or physical replication.
+
 
 
 CREATE UNLOGGED TABLE "USD/BTC"
@@ -21,4 +26,4 @@ CREATE UNLOGGED TABLE "USD/BTC"
     CONSTRAINT "EUR/USD_ticks_pkey" PRIMARY KEY (dt)
 );
 
-ALTER TABLE random_table SET UNLOGGED
+ALTER TABLE user_session SET UNLOGGED;
